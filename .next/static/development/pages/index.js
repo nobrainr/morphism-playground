@@ -5141,7 +5141,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var next_dynamic__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(next_dynamic__WEBPACK_IMPORTED_MODULE_1__);
 
 
-var MorphismPlayground = next_dynamic__WEBPACK_IMPORTED_MODULE_1___default()(Promise.all(/*! import() */[__webpack_require__.e("styles"), __webpack_require__.e(54)]).then(__webpack_require__.bind(null, /*! ../components/MorphismPlayground */ "./components/MorphismPlayground.tsx")), {
+var MorphismPlayground = next_dynamic__WEBPACK_IMPORTED_MODULE_1___default()(Promise.all(/*! import() */[__webpack_require__.e("styles"), __webpack_require__.e(2)]).then(__webpack_require__.bind(null, /*! ../components/MorphismPlayground */ "./components/MorphismPlayground.tsx")), {
   ssr: false,
   loadableGenerated: {
     webpack: function webpack() {

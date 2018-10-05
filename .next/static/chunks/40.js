@@ -1,9 +1,9 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[40],{
 
-/***/ "./node_modules/monaco-editor/esm/vs/basic-languages/ruby/ruby.js":
-/*!************************************************************************!*\
-  !*** ./node_modules/monaco-editor/esm/vs/basic-languages/ruby/ruby.js ***!
-  \************************************************************************/
+/***/ "./node_modules/monaco-editor/esm/vs/basic-languages/redshift/redshift.js":
+/*!********************************************************************************!*\
+  !*** ./node_modules/monaco-editor/esm/vs/basic-languages/redshift/redshift.js ***!
+  \********************************************************************************/
 /*! exports provided: conf, language */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -18,13 +18,13 @@ __webpack_require__.r(__webpack_exports__);
 
 var conf = {
     comments: {
-        lineComment: '#',
-        blockComment: ['=begin', '=end'],
+        lineComment: '--',
+        blockComment: ['/*', '*/'],
     },
     brackets: [
-        ['(', ')'],
         ['{', '}'],
-        ['[', ']']
+        ['[', ']'],
+        ['(', ')']
     ],
     autoClosingPairs: [
         { open: '{', close: '}' },
@@ -41,361 +41,181 @@ var conf = {
         { open: '\'', close: '\'' },
     ]
 };
-/*
- * Ruby language definition
- *
- * Quite a complex language due to elaborate escape sequences
- * and quoting of literate strings/regular expressions, and
- * an 'end' keyword that does not always apply to modifiers like until and while,
- * and a 'do' keyword that sometimes starts a block, but sometimes is part of
- * another statement (like 'while').
- *
- * (1) end blocks:
- * 'end' may end declarations like if or until, but sometimes 'if' or 'until'
- * are modifiers where there is no 'end'. Also, 'do' sometimes starts a block
- * that is ended by 'end', but sometimes it is part of a 'while', 'for', or 'until'
- * To do proper brace matching we do some elaborate state manipulation.
- * some examples:
- *
- *   until bla do
- *     work until tired
- *     list.each do
- *       something if test
- *     end
- *   end
- *
- * or
- *
- * if test
- *  something (if test then x end)
- *  bar if bla
- * end
- *
- * or, how about using class as a property..
- *
- * class Test
- *   def endpoint
- *     self.class.endpoint || routes
- *   end
- * end
- *
- * (2) quoting:
- * there are many kinds of strings and escape sequences. But also, one can
- * start many string-like things as '%qx' where q specifies the kind of string
- * (like a command, escape expanded, regular expression, symbol etc.), and x is
- * some character and only another 'x' ends the sequence. Except for brackets
- * where the closing bracket ends the sequence.. and except for a nested bracket
- * inside the string like entity. Also, such strings can contain interpolated
- * ruby expressions again (and span multiple lines). Moreover, expanded
- * regular expression can also contain comments.
- */
 var language = {
-    tokenPostfix: '.ruby',
+    defaultToken: '',
+    tokenPostfix: '.sql',
+    ignoreCase: true,
+    brackets: [
+        { open: '[', close: ']', token: 'delimiter.square' },
+        { open: '(', close: ')', token: 'delimiter.parenthesis' }
+    ],
     keywords: [
-        '__LINE__', '__ENCODING__', '__FILE__', 'BEGIN', 'END', 'alias', 'and', 'begin',
-        'break', 'case', 'class', 'def', 'defined?', 'do', 'else', 'elsif', 'end',
-        'ensure', 'for', 'false', 'if', 'in', 'module', 'next', 'nil', 'not', 'or', 'redo',
-        'rescue', 'retry', 'return', 'self', 'super', 'then', 'true', 'undef', 'unless',
-        'until', 'when', 'while', 'yield',
-    ],
-    keywordops: [
-        '::', '..', '...', '?', ':', '=>'
-    ],
-    builtins: [
-        'require', 'public', 'private', 'include', 'extend', 'attr_reader',
-        'protected', 'private_class_method', 'protected_class_method', 'new'
-    ],
-    // these are closed by 'end' (if, while and until are handled separately)
-    declarations: [
-        'module', 'class', 'def', 'case', 'do', 'begin', 'for', 'if', 'while', 'until', 'unless'
-    ],
-    linedecls: [
-        'def', 'case', 'do', 'begin', 'for', 'if', 'while', 'until', 'unless'
+        "AES128", "AES256", "ALL", "ALLOWOVERWRITE", "ANALYSE", "ANALYZE", "AND", "ANY", "ARRAY", "AS", "ASC", "AUTHORIZATION",
+        "BACKUP", "BETWEEN", "BINARY", "BLANKSASNULL", "BOTH", "BYTEDICT", "BZIP2", "CASE", "CAST", "CHECK", "COLLATE", "COLUMN",
+        "CONSTRAINT", "CREATE", "CREDENTIALS", "CROSS", "CURRENT_DATE", "CURRENT_TIME", "CURRENT_TIMESTAMP", "CURRENT_USER",
+        "CURRENT_USER_ID", "DEFAULT", "DEFERRABLE", "DEFLATE", "DEFRAG", "DELTA", "DELTA32K", "DESC", "DISABLE", "DISTINCT", "DO",
+        "ELSE", "EMPTYASNULL", "ENABLE", "ENCODE", "ENCRYPT", "ENCRYPTION", "END", "EXCEPT", "EXPLICIT", "FALSE", "FOR", "FOREIGN",
+        "FREEZE", "FROM", "FULL", "GLOBALDICT256", "GLOBALDICT64K", "GRANT", "GROUP", "GZIP", "HAVING", "IDENTITY", "IGNORE", "ILIKE",
+        "IN", "INITIALLY", "INNER", "INTERSECT", "INTO", "IS", "ISNULL", "JOIN", "LEADING", "LEFT", "LIKE", "LIMIT", "LOCALTIME",
+        "LOCALTIMESTAMP", "LUN", "LUNS", "LZO", "LZOP", "MINUS", "MOSTLY13", "MOSTLY32", "MOSTLY8", "NATURAL", "NEW", "NOT", "NOTNULL",
+        "NULL", "NULLS", "OFF", "OFFLINE", "OFFSET", "OID", "OLD", "ON", "ONLY", "OPEN", "OR", "ORDER", "OUTER", "OVERLAPS", "PARALLEL",
+        "PARTITION", "PERCENT", "PERMISSIONS", "PLACING", "PRIMARY", "RAW", "READRATIO", "RECOVER", "REFERENCES", "RESPECT", "REJECTLOG",
+        "RESORT", "RESTORE", "RIGHT", "SELECT", "SESSION_USER", "SIMILAR", "SNAPSHOT", "SOME", "SYSDATE", "SYSTEM", "TABLE", "TAG",
+        "TDES", "TEXT255", "TEXT32K", "THEN", "TIMESTAMP", "TO", "TOP", "TRAILING", "TRUE", "TRUNCATECOLUMNS", "UNION", "UNIQUE", "USER",
+        "USING", "VERBOSE", "WALLET", "WHEN", "WHERE", "WITH", "WITHOUT"
     ],
     operators: [
-        '^', '&', '|', '<=>', '==', '===', '!~', '=~', '>', '>=', '<', '<=', '<<', '>>', '+',
-        '-', '*', '/', '%', '**', '~', '+@', '-@', '[]', '[]=', '`',
-        '+=', '-=', '*=', '**=', '/=', '^=', '%=', '<<=', '>>=', '&=', '&&=', '||=', '|='
+        "AND", "BETWEEN", "IN", "LIKE", "NOT", "OR", "IS", "NULL", "INTERSECT", "UNION", "INNER", "JOIN", "LEFT", "OUTER", "RIGHT"
     ],
-    brackets: [
-        { open: '(', close: ')', token: 'delimiter.parenthesis' },
-        { open: '{', close: '}', token: 'delimiter.curly' },
-        { open: '[', close: ']', token: 'delimiter.square' }
+    builtinFunctions: [
+        "current_schema", "current_schemas", "has_database_privilege", "has_schema_privilege", "has_table_privilege", "age",
+        "current_time", "current_timestamp", "localtime", "isfinite", "now", "ascii", "get_bit", "get_byte", "set_bit", "set_byte",
+        "to_ascii", "approximate percentile_disc", "avg", "count", "listagg", "max", "median", "min", "percentile_cont", "stddev_samp",
+        "stddev_pop", "sum", "var_samp", "var_pop", "bit_and", "bit_or", "bool_and", "bool_or", "cume_dist", "first_value", "lag",
+        "last_value", "lead", "nth_value", "ratio_to_report", "dense_rank", "ntile", "percent_rank", "rank", "row_number", "case",
+        "coalesce", "decode", "greatest", "least", "nvl", "nvl2", "nullif", "add_months", "at time zone", "convert_timezone",
+        "current_date", "date_cmp", "date_cmp_timestamp", "date_cmp_timestamptz", "date_part_year", "dateadd", "datediff",
+        "date_part", "date_trunc", "extract", "getdate", "interval_cmp", "last_day", "months_between", "next_day", "sysdate",
+        "timeofday", "timestamp_cmp", "timestamp_cmp_date", "timestamp_cmp_timestamptz", "timestamptz_cmp", "timestamptz_cmp_date",
+        "timestamptz_cmp_timestamp", "timezone", "to_timestamp", "trunc", "abs", "acos", "asin", "atan", "atan2", "cbrt", "ceil",
+        "ceiling", "checksum", "cos", "cot", "degrees", "dexp", "dlog1", "dlog10", "exp", "floor", "ln", "log", "mod", "pi", "power",
+        "radians", "random", "round", "sin", "sign", "sqrt", "tan", "to_hex", "bpcharcmp", "btrim", "bttext_pattern_cmp", "char_length",
+        "character_length", "charindex", "chr", "concat", "crc32", "func_sha1", "initcap", "left and rights", "len", "length", "lower",
+        "lpad and rpads", "ltrim", "md5", "octet_length", "position", "quote_ident", "quote_literal", "regexp_count", "regexp_instr",
+        "regexp_replace", "regexp_substr", "repeat", "replace", "replicate", "reverse", "rtrim", "split_part", "strpos", "strtol",
+        "substring", "textlen", "translate", "trim", "upper", "cast", "convert", "to_char", "to_date", "to_number", "json_array_length",
+        "json_extract_array_element_text", "json_extract_path_text", "current_setting", "pg_cancel_backend", "pg_terminate_backend",
+        "set_config", "current_database", "current_user", "current_user_id", "pg_backend_pid", "pg_last_copy_count", "pg_last_copy_id",
+        "pg_last_query_id", "pg_last_unload_count", "session_user", "slice_num", "user", "version", "abbrev", "acosd", "any", "area",
+        "array_agg", "array_append", "array_cat", "array_dims", "array_fill", "array_length", "array_lower", "array_ndims",
+        "array_position", "array_positions", "array_prepend", "array_remove", "array_replace", "array_to_json", "array_to_string",
+        "array_to_tsvector", "array_upper", "asind", "atan2d", "atand", "bit", "bit_length", "bound_box", "box",
+        "brin_summarize_new_values", "broadcast", "cardinality", "center", "circle", "clock_timestamp", "col_description", "concat_ws",
+        "convert_from", "convert_to", "corr", "cosd", "cotd", "covar_pop", "covar_samp", "current_catalog", "current_query",
+        "current_role", "currval", "cursor_to_xml", "diameter", "div", "encode", "enum_first", "enum_last", "enum_range", "every",
+        "family", "format", "format_type", "generate_series", "generate_subscripts", "get_current_ts_config", "gin_clean_pending_list",
+        "grouping", "has_any_column_privilege", "has_column_privilege", "has_foreign_data_wrapper_privilege", "has_function_privilege",
+        "has_language_privilege", "has_sequence_privilege", "has_server_privilege", "has_tablespace_privilege", "has_type_privilege",
+        "height", "host", "hostmask", "inet_client_addr", "inet_client_port", "inet_merge", "inet_same_family", "inet_server_addr",
+        "inet_server_port", "isclosed", "isempty", "isopen", "json_agg", "json_object", "json_object_agg", "json_populate_record",
+        "json_populate_recordset", "json_to_record", "json_to_recordset", "jsonb_agg", "jsonb_object_agg", "justify_days", "justify_hours",
+        "justify_interval", "lastval", "left", "line", "localtimestamp", "lower_inc", "lower_inf", "lpad", "lseg", "make_date",
+        "make_interval", "make_time", "make_timestamp", "make_timestamptz", "masklen", "mode", "netmask", "network", "nextval", "npoints",
+        "num_nonnulls", "num_nulls", "numnode", "obj_description", "overlay", "parse_ident", "path", "pclose", "percentile_disc",
+        "pg_advisory_lock", "pg_advisory_lock_shared", "pg_advisory_unlock", "pg_advisory_unlock_all", "pg_advisory_unlock_shared",
+        "pg_advisory_xact_lock", "pg_advisory_xact_lock_shared", "pg_backup_start_time", "pg_blocking_pids", "pg_client_encoding",
+        "pg_collation_is_visible", "pg_column_size", "pg_conf_load_time", "pg_control_checkpoint", "pg_control_init", "pg_control_recovery",
+        "pg_control_system", "pg_conversion_is_visible", "pg_create_logical_replication_slot", "pg_create_physical_replication_slot",
+        "pg_create_restore_point", "pg_current_xlog_flush_location", "pg_current_xlog_insert_location", "pg_current_xlog_location",
+        "pg_database_size", "pg_describe_object", "pg_drop_replication_slot", "pg_export_snapshot", "pg_filenode_relation",
+        "pg_function_is_visible", "pg_get_constraintdef", "pg_get_expr", "pg_get_function_arguments", "pg_get_function_identity_arguments",
+        "pg_get_function_result", "pg_get_functiondef", "pg_get_indexdef", "pg_get_keywords", "pg_get_object_address",
+        "pg_get_owned_sequence", "pg_get_ruledef", "pg_get_serial_sequence", "pg_get_triggerdef", "pg_get_userbyid", "pg_get_viewdef",
+        "pg_has_role", "pg_identify_object", "pg_identify_object_as_address", "pg_index_column_has_property", "pg_index_has_property",
+        "pg_indexam_has_property", "pg_indexes_size", "pg_is_in_backup", "pg_is_in_recovery", "pg_is_other_temp_schema",
+        "pg_is_xlog_replay_paused", "pg_last_committed_xact", "pg_last_xact_replay_timestamp", "pg_last_xlog_receive_location",
+        "pg_last_xlog_replay_location", "pg_listening_channels", "pg_logical_emit_message", "pg_logical_slot_get_binary_changes",
+        "pg_logical_slot_get_changes", "pg_logical_slot_peek_binary_changes", "pg_logical_slot_peek_changes", "pg_ls_dir",
+        "pg_my_temp_schema", "pg_notification_queue_usage", "pg_opclass_is_visible", "pg_operator_is_visible", "pg_opfamily_is_visible",
+        "pg_options_to_table", "pg_postmaster_start_time", "pg_read_binary_file", "pg_read_file", "pg_relation_filenode",
+        "pg_relation_filepath", "pg_relation_size", "pg_reload_conf", "pg_replication_origin_create", "pg_replication_origin_drop",
+        "pg_replication_origin_oid", "pg_replication_origin_progress", "pg_replication_origin_session_is_setup",
+        "pg_replication_origin_session_progress", "pg_replication_origin_session_reset", "pg_replication_origin_session_setup",
+        "pg_replication_origin_xact_reset", "pg_replication_origin_xact_setup", "pg_rotate_logfile", "pg_size_bytes", "pg_size_pretty",
+        "pg_sleep", "pg_sleep_for", "pg_sleep_until", "pg_start_backup", "pg_stat_file", "pg_stop_backup", "pg_switch_xlog",
+        "pg_table_is_visible", "pg_table_size", "pg_tablespace_databases", "pg_tablespace_location", "pg_tablespace_size",
+        "pg_total_relation_size", "pg_trigger_depth", "pg_try_advisory_lock", "pg_try_advisory_lock_shared", "pg_try_advisory_xact_lock",
+        "pg_try_advisory_xact_lock_shared", "pg_ts_config_is_visible", "pg_ts_dict_is_visible", "pg_ts_parser_is_visible",
+        "pg_ts_template_is_visible", "pg_type_is_visible", "pg_typeof", "pg_xact_commit_timestamp", "pg_xlog_location_diff",
+        "pg_xlog_replay_pause", "pg_xlog_replay_resume", "pg_xlogfile_name", "pg_xlogfile_name_offset", "phraseto_tsquery",
+        "plainto_tsquery", "point", "polygon", "popen", "pqserverversion", "query_to_xml", "querytree", "quote_nullable", "radius",
+        "range_merge", "regexp_matches", "regexp_split_to_array", "regexp_split_to_table", "regr_avgx", "regr_avgy", "regr_count",
+        "regr_intercept", "regr_r2", "regr_slope", "regr_sxx", "regr_sxy", "regr_syy", "right", "row_security_active", "row_to_json",
+        "rpad", "scale", "set_masklen", "setseed", "setval", "setweight", "shobj_description", "sind", "sprintf", "statement_timestamp",
+        "stddev", "string_agg", "string_to_array", "strip", "substr", "table_to_xml", "table_to_xml_and_xmlschema", "tand", "text",
+        "to_json", "to_regclass", "to_regnamespace", "to_regoper", "to_regoperator", "to_regproc", "to_regprocedure", "to_regrole",
+        "to_regtype", "to_tsquery", "to_tsvector", "transaction_timestamp", "ts_debug", "ts_delete", "ts_filter", "ts_headline",
+        "ts_lexize", "ts_parse", "ts_rank", "ts_rank_cd", "ts_rewrite", "ts_stat", "ts_token_type", "tsquery_phrase", "tsvector_to_array",
+        "tsvector_update_trigger", "tsvector_update_trigger_column", "txid_current", "txid_current_snapshot", "txid_snapshot_xip",
+        "txid_snapshot_xmax", "txid_snapshot_xmin", "txid_visible_in_snapshot", "unnest", "upper_inc", "upper_inf", "variance", "width",
+        "width_bucket", "xml_is_well_formed", "xml_is_well_formed_content", "xml_is_well_formed_document", "xmlagg", "xmlcomment",
+        "xmlconcat", "xmlelement", "xmlexists", "xmlforest", "xmlparse", "xmlpi", "xmlroot", "xmlserialize", "xpath", "xpath_exists"
     ],
-    // we include these common regular expressions
-    symbols: /[=><!~?:&|+\-*\/\^%\.]+/,
-    // escape sequences
-    escape: /(?:[abefnrstv\\"'\n\r]|[0-7]{1,3}|x[0-9A-Fa-f]{1,2}|u[0-9A-Fa-f]{4})/,
-    escapes: /\\(?:C\-(@escape|.)|c(@escape|.)|@escape)/,
-    decpart: /\d(_?\d)*/,
-    decimal: /0|@decpart/,
-    delim: /[^a-zA-Z0-9\s\n\r]/,
-    heredelim: /(?:\w+|'[^']*'|"[^"]*"|`[^`]*`)/,
-    regexpctl: /[(){}\[\]\$\^|\-*+?\.]/,
-    regexpesc: /\\(?:[AzZbBdDfnrstvwWn0\\\/]|@regexpctl|c[A-Z]|x[0-9a-fA-F]{2}|u[0-9a-fA-F]{4})?/,
-    // The main tokenizer for our languages
+    builtinVariables: [
+    // NOT SUPPORTED
+    ],
+    pseudoColumns: [
+    // NOT SUPPORTED
+    ],
     tokenizer: {
-        // Main entry.
-        // root.<decl> where decl is the current opening declaration (like 'class')
         root: [
-            // identifiers and keywords
-            // most complexity here is due to matching 'end' correctly with declarations.
-            // We distinguish a declaration that comes first on a line, versus declarations further on a line (which are most likey modifiers)
-            [/^(\s*)([a-z_]\w*[!?=]?)/, ['white',
-                    {
-                        cases: {
-                            'for|until|while': { token: 'keyword.$2', next: '@dodecl.$2' },
-                            '@declarations': { token: 'keyword.$2', next: '@root.$2' },
-                            'end': { token: 'keyword.$S2', next: '@pop' },
-                            '@keywords': 'keyword',
-                            '@builtins': 'predefined',
-                            '@default': 'identifier'
-                        }
-                    }]],
-            [/[a-z_]\w*[!?=]?/,
-                {
-                    cases: {
-                        'if|unless|while|until': { token: 'keyword.$0x', next: '@modifier.$0x' },
-                        'for': { token: 'keyword.$2', next: '@dodecl.$2' },
-                        '@linedecls': { token: 'keyword.$0', next: '@root.$0' },
-                        'end': { token: 'keyword.$S2', next: '@pop' },
-                        '@keywords': 'keyword',
-                        '@builtins': 'predefined',
-                        '@default': 'identifier'
-                    }
-                }],
-            [/[A-Z][\w]*[!?=]?/, 'constructor.identifier'],
-            [/\$[\w]*/, 'global.constant'],
-            [/@[\w]*/, 'namespace.instance.identifier'],
-            [/@@[\w]*/, 'namespace.class.identifier'],
-            // here document
-            [/<<[-~](@heredelim).*/, { token: 'string.heredoc.delimiter', next: '@heredoc.$1' }],
-            [/[ \t\r\n]+<<(@heredelim).*/, { token: 'string.heredoc.delimiter', next: '@heredoc.$1' }],
-            [/^<<(@heredelim).*/, { token: 'string.heredoc.delimiter', next: '@heredoc.$1' }],
-            // whitespace
+            { include: '@comments' },
             { include: '@whitespace' },
-            // strings
-            [/"/, { token: 'string.d.delim', next: '@dstring.d."' }],
-            [/'/, { token: 'string.sq.delim', next: '@sstring.sq' }],
-            // % literals. For efficiency, rematch in the 'pstring' state
-            [/%([rsqxwW]|Q?)/, { token: '@rematch', next: 'pstring' }],
-            // commands and symbols
-            [/`/, { token: 'string.x.delim', next: '@dstring.x.`' }],
-            [/:(\w|[$@])\w*[!?=]?/, 'string.s'],
-            [/:"/, { token: 'string.s.delim', next: '@dstring.s."' }],
-            [/:'/, { token: 'string.s.delim', next: '@sstring.s' }],
-            // regular expressions. Lookahead for a (not escaped) closing forwardslash on the same line
-            [/\/(?=(\\\/|[^\/\n])+\/)/, { token: 'regexp.delim', next: '@regexp' }],
-            // delimiters and operators
-            [/[{}()\[\]]/, '@brackets'],
-            [/@symbols/, {
+            { include: '@pseudoColumns' },
+            { include: '@numbers' },
+            { include: '@strings' },
+            { include: '@complexIdentifiers' },
+            { include: '@scopes' },
+            [/[;,.]/, 'delimiter'],
+            [/[()]/, '@brackets'],
+            [/[\w@#$]+/, {
                     cases: {
-                        '@keywordops': 'keyword',
+                        '@keywords': 'keyword',
                         '@operators': 'operator',
-                        '@default': ''
-                    }
-                }],
-            [/[;,]/, 'delimiter'],
-            // numbers
-            [/0[xX][0-9a-fA-F](_?[0-9a-fA-F])*/, 'number.hex'],
-            [/0[_oO][0-7](_?[0-7])*/, 'number.octal'],
-            [/0[bB][01](_?[01])*/, 'number.binary'],
-            [/0[dD]@decpart/, 'number'],
-            [/@decimal((\.@decpart)?([eE][\-+]?@decpart)?)/, {
-                    cases: {
-                        '$1': 'number.float',
-                        '@default': 'number'
-                    }
-                }],
-        ],
-        // used to not treat a 'do' as a block opener if it occurs on the same
-        // line as a 'do' statement: 'while|until|for'
-        // dodecl.<decl> where decl is the declarations started, like 'while'
-        dodecl: [
-            [/^/, { token: '', switchTo: '@root.$S2' }],
-            [/[a-z_]\w*[!?=]?/, {
-                    cases: {
-                        'end': { token: 'keyword.$S2', next: '@pop' },
-                        'do': { token: 'keyword', switchTo: '@root.$S2' },
-                        '@linedecls': { token: '@rematch', switchTo: '@root.$S2' },
-                        '@keywords': 'keyword',
-                        '@builtins': 'predefined',
+                        '@builtinVariables': 'predefined',
+                        '@builtinFunctions': 'predefined',
                         '@default': 'identifier'
                     }
                 }],
-            { include: '@root' }
+            [/[<>=!%&+\-*/|~^]/, 'operator'],
         ],
-        // used to prevent potential modifiers ('if|until|while|unless') to match
-        // with 'end' keywords.
-        // modifier.<decl>x where decl is the declaration starter, like 'if'
-        modifier: [
-            [/^/, '', '@pop'],
-            [/[a-z_]\w*[!?=]?/, {
-                    cases: {
-                        'end': { token: 'keyword.$S2', next: '@pop' },
-                        'then|else|elsif|do': { token: 'keyword', switchTo: '@root.$S2' },
-                        '@linedecls': { token: '@rematch', switchTo: '@root.$S2' },
-                        '@keywords': 'keyword',
-                        '@builtins': 'predefined',
-                        '@default': 'identifier'
-                    }
-                }],
-            { include: '@root' }
-        ],
-        // single quote strings (also used for symbols)
-        // sstring.<kind>  where kind is 'sq' (single quote) or 's' (symbol)
-        sstring: [
-            [/[^\\']+/, 'string.$S2'],
-            [/\\\\|\\'|\\$/, 'string.$S2.escape'],
-            [/\\./, 'string.$S2.invalid'],
-            [/'/, { token: 'string.$S2.delim', next: '@pop' }]
-        ],
-        // double quoted "string".
-        // dstring.<kind>.<delim> where kind is 'd' (double quoted), 'x' (command), or 's' (symbol)
-        // and delim is the ending delimiter (" or `)
-        dstring: [
-            [/[^\\`"#]+/, 'string.$S2'],
-            [/#/, 'string.$S2.escape', '@interpolated'],
-            [/\\$/, 'string.$S2.escape'],
-            [/@escapes/, 'string.$S2.escape'],
-            [/\\./, 'string.$S2.escape.invalid'],
-            [/[`"]/, {
-                    cases: {
-                        '$#==$S3': { token: 'string.$S2.delim', next: '@pop' },
-                        '@default': 'string.$S2'
-                    }
-                }]
-        ],
-        // literal documents
-        // heredoc.<close> where close is the closing delimiter
-        heredoc: [
-            [/^(\s*)(@heredelim)$/, {
-                    cases: {
-                        '$2==$S2': ['string.heredoc', { token: 'string.heredoc.delimiter', next: '@pop' }],
-                        '@default': ['string.heredoc', 'string.heredoc']
-                    }
-                }],
-            [/.*/, 'string.heredoc'],
-        ],
-        // interpolated sequence
-        interpolated: [
-            [/\$\w*/, 'global.constant', '@pop'],
-            [/@\w*/, 'namespace.class.identifier', '@pop'],
-            [/@@\w*/, 'namespace.instance.identifier', '@pop'],
-            [/[{]/, { token: 'string.escape.curly', switchTo: '@interpolated_compound' }],
-            ['', '', '@pop'],
-        ],
-        // any code
-        interpolated_compound: [
-            [/[}]/, { token: 'string.escape.curly', next: '@pop' }],
-            { include: '@root' },
-        ],
-        // %r quoted regexp
-        // pregexp.<open>.<close> where open/close are the open/close delimiter
-        pregexp: [
-            { include: '@whitespace' },
-            // turns out that you can quote using regex control characters, aargh!
-            // for example; %r|kgjgaj| is ok (even though | is used for alternation)
-            // so, we need to match those first
-            [/[^\(\{\[\\]/, {
-                    cases: {
-                        '$#==$S3': { token: 'regexp.delim', next: '@pop' },
-                        '$#==$S2': { token: 'regexp.delim', next: '@push' },
-                        '~[)}\\]]': '@brackets.regexp.escape.control',
-                        '~@regexpctl': 'regexp.escape.control',
-                        '@default': 'regexp'
-                    }
-                }],
-            { include: '@regexcontrol' },
-        ],
-        // We match regular expression quite precisely
-        regexp: [
-            { include: '@regexcontrol' },
-            [/[^\\\/]/, 'regexp'],
-            ['/[ixmp]*', { token: 'regexp.delim' }, '@pop'],
-        ],
-        regexcontrol: [
-            [/(\{)(\d+(?:,\d*)?)(\})/, ['@brackets.regexp.escape.control', 'regexp.escape.control', '@brackets.regexp.escape.control']],
-            [/(\[)(\^?)/, ['@brackets.regexp.escape.control', { token: 'regexp.escape.control', next: '@regexrange' }]],
-            [/(\()(\?[:=!])/, ['@brackets.regexp.escape.control', 'regexp.escape.control']],
-            [/\(\?#/, { token: 'regexp.escape.control', next: '@regexpcomment' }],
-            [/[()]/, '@brackets.regexp.escape.control'],
-            [/@regexpctl/, 'regexp.escape.control'],
-            [/\\$/, 'regexp.escape'],
-            [/@regexpesc/, 'regexp.escape'],
-            [/\\\./, 'regexp.invalid'],
-            [/#/, 'regexp.escape', '@interpolated'],
-        ],
-        regexrange: [
-            [/-/, 'regexp.escape.control'],
-            [/\^/, 'regexp.invalid'],
-            [/\\$/, 'regexp.escape'],
-            [/@regexpesc/, 'regexp.escape'],
-            [/[^\]]/, 'regexp'],
-            [/\]/, '@brackets.regexp.escape.control', '@pop'],
-        ],
-        regexpcomment: [
-            [/[^)]+/, 'comment'],
-            [/\)/, { token: 'regexp.escape.control', next: '@pop' }]
-        ],
-        // % quoted strings
-        // A bit repetitive since we need to often special case the kind of ending delimiter
-        pstring: [
-            [/%([qws])\(/, { token: 'string.$1.delim', switchTo: '@qstring.$1.(.)' }],
-            [/%([qws])\[/, { token: 'string.$1.delim', switchTo: '@qstring.$1.[.]' }],
-            [/%([qws])\{/, { token: 'string.$1.delim', switchTo: '@qstring.$1.{.}' }],
-            [/%([qws])</, { token: 'string.$1.delim', switchTo: '@qstring.$1.<.>' }],
-            [/%([qws])(@delim)/, { token: 'string.$1.delim', switchTo: '@qstring.$1.$2.$2' }],
-            [/%r\(/, { token: 'regexp.delim', switchTo: '@pregexp.(.)' }],
-            [/%r\[/, { token: 'regexp.delim', switchTo: '@pregexp.[.]' }],
-            [/%r\{/, { token: 'regexp.delim', switchTo: '@pregexp.{.}' }],
-            [/%r</, { token: 'regexp.delim', switchTo: '@pregexp.<.>' }],
-            [/%r(@delim)/, { token: 'regexp.delim', switchTo: '@pregexp.$1.$1' }],
-            [/%(x|W|Q?)\(/, { token: 'string.$1.delim', switchTo: '@qqstring.$1.(.)' }],
-            [/%(x|W|Q?)\[/, { token: 'string.$1.delim', switchTo: '@qqstring.$1.[.]' }],
-            [/%(x|W|Q?)\{/, { token: 'string.$1.delim', switchTo: '@qqstring.$1.{.}' }],
-            [/%(x|W|Q?)</, { token: 'string.$1.delim', switchTo: '@qqstring.$1.<.>' }],
-            [/%(x|W|Q?)(@delim)/, { token: 'string.$1.delim', switchTo: '@qqstring.$1.$2.$2' }],
-            [/%([rqwsxW]|Q?)./, { token: 'invalid', next: '@pop' }],
-            [/./, { token: 'invalid', next: '@pop' }],
-        ],
-        // non-expanded quoted string.
-        // qstring.<kind>.<open>.<close>
-        //  kind = q|w|s  (single quote, array, symbol)
-        //  open = open delimiter
-        //  close = close delimiter
-        qstring: [
-            [/\\$/, 'string.$S2.escape'],
-            [/\\./, 'string.$S2.escape'],
-            [/./, {
-                    cases: {
-                        '$#==$S4': { token: 'string.$S2.delim', next: '@pop' },
-                        '$#==$S3': { token: 'string.$S2.delim', next: '@push' },
-                        '@default': 'string.$S2'
-                    }
-                }],
-        ],
-        // expanded quoted string.
-        // qqstring.<kind>.<open>.<close>
-        //  kind = Q|W|x  (double quote, array, command)
-        //  open = open delimiter
-        //  close = close delimiter
-        qqstring: [
-            [/#/, 'string.$S2.escape', '@interpolated'],
-            { include: '@qstring' }
-        ],
-        // whitespace & comments
         whitespace: [
-            [/[ \t\r\n]+/, ''],
-            [/^\s*=begin\b/, 'comment', '@comment'],
-            [/#.*$/, 'comment'],
+            [/\s+/, 'white']
+        ],
+        comments: [
+            [/--+.*/, 'comment'],
+            [/\/\*/, { token: 'comment.quote', next: '@comment' }]
         ],
         comment: [
-            [/[^=]+/, 'comment'],
-            [/^\s*=begin\b/, 'comment.invalid'],
-            [/^\s*=end\b.*/, 'comment', '@pop'],
-            [/[=]/, 'comment']
+            [/[^*/]+/, 'comment'],
+            // Not supporting nested comments, as nested comments seem to not be standard?
+            // i.e. http://stackoverflow.com/questions/728172/are-there-multiline-comment-delimiters-in-sql-that-are-vendor-agnostic
+            // [/\/\*/, { token: 'comment.quote', next: '@push' }],    // nested comment not allowed :-(
+            [/\*\//, { token: 'comment.quote', next: '@pop' }],
+            [/./, 'comment']
         ],
+        pseudoColumns: [
+            [/[$][A-Za-z_][\w@#$]*/, {
+                    cases: {
+                        '@pseudoColumns': 'predefined',
+                        '@default': 'identifier'
+                    }
+                }],
+        ],
+        numbers: [
+            [/0[xX][0-9a-fA-F]*/, 'number'],
+            [/[$][+-]*\d*(\.\d*)?/, 'number'],
+            [/((\d+(\.\d*)?)|(\.\d+))([eE][\-+]?\d+)?/, 'number']
+        ],
+        strings: [
+            [/'/, { token: 'string', next: '@string' }],
+        ],
+        string: [
+            [/[^']+/, 'string'],
+            [/''/, 'string'],
+            [/'/, { token: 'string', next: '@pop' }]
+        ],
+        complexIdentifiers: [
+            [/"/, { token: 'identifier.quote', next: '@quotedIdentifier' }]
+        ],
+        quotedIdentifier: [
+            [/[^"]+/, 'identifier'],
+            [/""/, 'identifier'],
+            [/"/, { token: 'identifier.quote', next: '@pop' }]
+        ],
+        scopes: [
+        // NOT SUPPORTED
+        ]
     }
 };
 

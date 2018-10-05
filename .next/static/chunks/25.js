@@ -1,9 +1,9 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[25],{
 
-/***/ "./node_modules/monaco-editor/esm/vs/basic-languages/msdax/msdax.js":
-/*!**************************************************************************!*\
-  !*** ./node_modules/monaco-editor/esm/vs/basic-languages/msdax/msdax.js ***!
-  \**************************************************************************/
+/***/ "./node_modules/monaco-editor/esm/vs/basic-languages/markdown/markdown.js":
+/*!********************************************************************************!*\
+  !*** ./node_modules/monaco-editor/esm/vs/basic-languages/markdown/markdown.js ***!
+  \********************************************************************************/
 /*! exports provided: conf, language */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -16,167 +16,169 @@ __webpack_require__.r(__webpack_exports__);
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+var TOKEN_HEADER_LEAD = 'keyword';
+var TOKEN_HEADER = 'keyword';
+var TOKEN_EXT_HEADER = 'keyword';
+var TOKEN_SEPARATOR = 'meta.separator';
+var TOKEN_QUOTE = 'comment';
+var TOKEN_LIST = 'keyword';
+var TOKEN_BLOCK = 'string';
+var TOKEN_BLOCK_CODE = 'variable.source';
+var DELIM_ASSIGN = 'delimiter.html';
+var ATTRIB_NAME = 'attribute.name.html';
+var ATTRIB_VALUE = 'string.html';
+function getTag(name) {
+    return 'tag';
+}
 var conf = {
     comments: {
-        lineComment: '//',
-        blockComment: ['/*', '*/'],
+        blockComment: ['<!--', '-->',]
     },
-    brackets: [['[', ']'], ['(', ')'], ['{', '}']],
+    brackets: [
+        ['{', '}'],
+        ['[', ']'],
+        ['(', ')']
+    ],
     autoClosingPairs: [
-        { open: '"', close: '"', notIn: ['string', 'comment'] },
-        { open: '\'', close: '\'', notIn: ['string', 'comment'] },
-        { open: '[', close: ']', notIn: ['string', 'comment'] },
-        { open: '(', close: ')', notIn: ['string', 'comment'] },
-        { open: '{', close: '}', notIn: ['string', 'comment'] },
-    ]
+        { open: '{', close: '}' },
+        { open: '[', close: ']' },
+        { open: '(', close: ')' },
+        { open: '<', close: '>', notIn: ['string'] }
+    ],
+    surroundingPairs: [
+        { open: '(', close: ')' },
+        { open: '[', close: ']' },
+        { open: '`', close: '`' },
+    ],
+    folding: {
+        markers: {
+            start: new RegExp("^\\s*<!--\\s*#?region\\b.*-->"),
+            end: new RegExp("^\\s*<!--\\s*#?endregion\\b.*-->")
+        }
+    }
 };
 var language = {
     defaultToken: '',
-    tokenPostfix: '.msdax',
-    ignoreCase: true,
-    brackets: [
-        { open: '[', close: ']', token: 'delimiter.square' },
-        { open: '{', close: '}', token: 'delimiter.brackets' },
-        { open: '(', close: ')', token: 'delimiter.parenthesis' }
-    ],
-    keywords: [
-        // Query keywords
-        'VAR',
-        'RETURN',
-        'NOT',
-        'EVALUATE',
-        'DATATABLE',
-        'ORDER',
-        'BY',
-        'START',
-        'AT',
-        'DEFINE',
-        'MEASURE',
-        'ASC',
-        'DESC',
-        'IN',
-        // Datatable types
-        'BOOLEAN',
-        'DOUBLE',
-        'INTEGER',
-        'DATETIME',
-        'CURRENCY',
-        'STRING'
-    ],
-    functions: [
-        // Relational
-        'CLOSINGBALANCEMONTH', 'CLOSINGBALANCEQUARTER', 'CLOSINGBALANCEYEAR', 'DATEADD', 'DATESBETWEEN',
-        'DATESINPERIOD', 'DATESMTD', 'DATESQTD', 'DATESYTD', 'ENDOFMONTH',
-        'ENDOFQUARTER', 'ENDOFYEAR', 'FIRSTDATE', 'FIRSTNONBLANK', 'LASTDATE',
-        'LASTNONBLANK', 'NEXTDAY', 'NEXTMONTH', 'NEXTQUARTER', 'NEXTYEAR',
-        'OPENINGBALANCEMONTH', 'OPENINGBALANCEQUARTER', 'OPENINGBALANCEYEAR', 'PARALLELPERIOD', 'PREVIOUSDAY',
-        'PREVIOUSMONTH', 'PREVIOUSQUARTER', 'PREVIOUSYEAR', 'SAMEPERIODLASTYEAR', 'STARTOFMONTH',
-        'STARTOFQUARTER', 'STARTOFYEAR', 'TOTALMTD', 'TOTALQTD', 'TOTALYTD',
-        'ADDCOLUMNS', 'ADDMISSINGITEMS', 'ALL', 'ALLEXCEPT', 'ALLNOBLANKROW',
-        'ALLSELECTED', 'CALCULATE', 'CALCULATETABLE', 'CALENDAR', 'CALENDARAUTO',
-        'CROSSFILTER', 'CROSSJOIN', 'CURRENTGROUP', 'DATATABLE', 'DETAILROWS',
-        'DISTINCT', 'EARLIER', 'EARLIEST', 'EXCEPT', 'FILTER',
-        'FILTERS', 'GENERATE', 'GENERATEALL', 'GROUPBY', 'IGNORE',
-        'INTERSECT', 'ISONORAFTER', 'KEEPFILTERS', 'LOOKUPVALUE', 'NATURALINNERJOIN',
-        'NATURALLEFTOUTERJOIN', 'RELATED', 'RELATEDTABLE', 'ROLLUP', 'ROLLUPADDISSUBTOTAL',
-        'ROLLUPGROUP', 'ROLLUPISSUBTOTAL', 'ROW', 'SAMPLE', 'SELECTCOLUMNS',
-        'SUBSTITUTEWITHINDEX', 'SUMMARIZE', 'SUMMARIZECOLUMNS', 'TOPN', 'TREATAS',
-        'UNION', 'USERELATIONSHIP', 'VALUES', 'SUM', 'SUMX',
-        'PATH', 'PATHCONTAINS', 'PATHITEM', 'PATHITEMREVERSE', 'PATHLENGTH',
-        'AVERAGE', 'AVERAGEA', 'AVERAGEX', 'COUNT', 'COUNTA',
-        'COUNTAX', 'COUNTBLANK', 'COUNTROWS', 'COUNTX', 'DISTINCTCOUNT',
-        'DIVIDE', 'GEOMEAN', 'GEOMEANX', 'MAX', 'MAXA',
-        'MAXX', 'MEDIAN', 'MEDIANX', 'MIN', 'MINA',
-        'MINX', 'PERCENTILE.EXC', 'PERCENTILE.INC', 'PERCENTILEX.EXC', 'PERCENTILEX.INC',
-        'PRODUCT', 'PRODUCTX', 'RANK.EQ', 'RANKX', 'STDEV.P',
-        'STDEV.S', 'STDEVX.P', 'STDEVX.S', 'VAR.P', 'VAR.S',
-        'VARX.P', 'VARX.S', 'XIRR', 'XNPV',
-        // Scalar
-        'DATE', 'DATEDIFF', 'DATEVALUE', 'DAY', 'EDATE',
-        'EOMONTH', 'HOUR', 'MINUTE', 'MONTH', 'NOW',
-        'SECOND', 'TIME', 'TIMEVALUE', 'TODAY', 'WEEKDAY',
-        'WEEKNUM', 'YEAR', 'YEARFRAC', 'CONTAINS', 'CONTAINSROW',
-        'CUSTOMDATA', 'ERROR', 'HASONEFILTER', 'HASONEVALUE', 'ISBLANK',
-        'ISCROSSFILTERED', 'ISEMPTY', 'ISERROR', 'ISEVEN', 'ISFILTERED',
-        'ISLOGICAL', 'ISNONTEXT', 'ISNUMBER', 'ISODD', 'ISSUBTOTAL',
-        'ISTEXT', 'USERNAME', 'USERPRINCIPALNAME', 'AND', 'FALSE',
-        'IF', 'IFERROR', 'NOT', 'OR', 'SWITCH',
-        'TRUE', 'ABS', 'ACOS', 'ACOSH', 'ACOT',
-        'ACOTH', 'ASIN', 'ASINH', 'ATAN', 'ATANH',
-        'BETA.DIST', 'BETA.INV', 'CEILING', 'CHISQ.DIST', 'CHISQ.DIST.RT',
-        'CHISQ.INV', 'CHISQ.INV.RT', 'COMBIN', 'COMBINA', 'CONFIDENCE.NORM',
-        'CONFIDENCE.T', 'COS', 'COSH', 'COT', 'COTH',
-        'CURRENCY', 'DEGREES', 'EVEN', 'EXP', 'EXPON.DIST',
-        'FACT', 'FLOOR', 'GCD', 'INT', 'ISO.CEILING',
-        'LCM', 'LN', 'LOG', 'LOG10', 'MOD',
-        'MROUND', 'ODD', 'PERMUT', 'PI', 'POISSON.DIST',
-        'POWER', 'QUOTIENT', 'RADIANS', 'RAND', 'RANDBETWEEN',
-        'ROUND', 'ROUNDDOWN', 'ROUNDUP', 'SIGN', 'SIN',
-        'SINH', 'SQRT', 'SQRTPI', 'TAN', 'TANH',
-        'TRUNC', 'BLANK', 'CONCATENATE', 'CONCATENATEX', 'EXACT',
-        'FIND', 'FIXED', 'FORMAT', 'LEFT', 'LEN',
-        'LOWER', 'MID', 'REPLACE', 'REPT', 'RIGHT',
-        'SEARCH', 'SUBSTITUTE', 'TRIM', 'UNICHAR', 'UNICODE',
-        'UPPER', 'VALUE'
+    tokenPostfix: '.md',
+    // escape codes
+    control: /[\\`*_\[\]{}()#+\-\.!]/,
+    noncontrol: /[^\\`*_\[\]{}()#+\-\.!]/,
+    escapes: /\\(?:@control)/,
+    // escape codes for javascript/CSS strings
+    jsescapes: /\\(?:[btnfr\\"']|[0-7][0-7]?|[0-3][0-7]{2})/,
+    // non matched elements
+    empty: [
+        'area', 'base', 'basefont', 'br', 'col', 'frame',
+        'hr', 'img', 'input', 'isindex', 'link', 'meta', 'param'
     ],
     tokenizer: {
         root: [
-            { include: '@comments' },
-            { include: '@whitespace' },
-            { include: '@numbers' },
-            { include: '@strings' },
-            { include: '@complexIdentifiers' },
-            [/[;,.]/, 'delimiter'],
-            [/[({})]/, '@brackets'],
-            [/[a-z_][a-zA-Z0-9_]*/, {
+            // headers (with #)
+            [/^(\s{0,3})(#+)((?:[^\\#]|@escapes)+)((?:#+)?)/, ['white', TOKEN_HEADER_LEAD, TOKEN_HEADER, TOKEN_HEADER]],
+            // headers (with =)
+            [/^\s*(=+|\-+)\s*$/, TOKEN_EXT_HEADER],
+            // headers (with ***)
+            [/^\s*((\*[ ]?)+)\s*$/, TOKEN_SEPARATOR],
+            // quote
+            [/^\s*>+/, TOKEN_QUOTE],
+            // list (starting with * or number)
+            [/^\s*([\*\-+:]|\d+\.)\s/, TOKEN_LIST],
+            // code block (4 spaces indent)
+            [/^(\t|[ ]{4})[^ ].*$/, TOKEN_BLOCK],
+            // code block (3 tilde)
+            [/^\s*~~~\s*((?:\w|[\/\-#])+)?\s*$/, { token: TOKEN_BLOCK, next: '@codeblock' }],
+            // github style code blocks (with backticks and language)
+            [/^\s*```\s*((?:\w|[\/\-#])+)\s*$/, { token: TOKEN_BLOCK, next: '@codeblockgh', nextEmbedded: '$1' }],
+            // github style code blocks (with backticks but no language)
+            [/^\s*```\s*$/, { token: TOKEN_BLOCK, next: '@codeblock' }],
+            // markup within lines
+            { include: '@linecontent' },
+        ],
+        codeblock: [
+            [/^\s*~~~\s*$/, { token: TOKEN_BLOCK, next: '@pop' }],
+            [/^\s*```\s*$/, { token: TOKEN_BLOCK, next: '@pop' }],
+            [/.*$/, TOKEN_BLOCK_CODE],
+        ],
+        // github style code blocks
+        codeblockgh: [
+            [/```\s*$/, { token: TOKEN_BLOCK_CODE, next: '@pop', nextEmbedded: '@pop' }],
+            [/[^`]+/, TOKEN_BLOCK_CODE],
+        ],
+        linecontent: [
+            // escapes
+            [/&\w+;/, 'string.escape'],
+            [/@escapes/, 'escape'],
+            // various markup
+            [/\b__([^\\_]|@escapes|_(?!_))+__\b/, 'strong'],
+            [/\*\*([^\\*]|@escapes|\*(?!\*))+\*\*/, 'strong'],
+            [/\b_[^_]+_\b/, 'emphasis'],
+            [/\*([^\\*]|@escapes)+\*/, 'emphasis'],
+            [/`([^\\`]|@escapes)+`/, 'variable'],
+            // links
+            [/\{[^}]+\}/, 'string.target'],
+            [/(!?\[)((?:[^\]\\]|@escapes)*)(\]\([^\)]+\))/, ['string.link', '', 'string.link']],
+            [/(!?\[)((?:[^\]\\]|@escapes)*)(\])/, 'string.link'],
+            // or html
+            { include: 'html' },
+        ],
+        // Note: it is tempting to rather switch to the real HTML mode instead of building our own here
+        // but currently there is a limitation in Monarch that prevents us from doing it: The opening
+        // '<' would start the HTML mode, however there is no way to jump 1 character back to let the
+        // HTML mode also tokenize the opening angle bracket. Thus, even though we could jump to HTML,
+        // we cannot correctly tokenize it in that mode yet.
+        html: [
+            // html tags
+            [/<(\w+)\/>/, getTag('$1')],
+            [/<(\w+)/, {
                     cases: {
-                        '@keywords': 'keyword',
-                        '@functions': 'keyword',
-                        '@default': 'identifier'
+                        '@empty': { token: getTag('$1'), next: '@tag.$1' },
+                        '@default': { token: getTag('$1'), next: '@tag.$1' }
                     }
                 }],
-            [/[<>=!%&+\-*/|~^]/, 'operator'],
-        ],
-        whitespace: [
-            [/\s+/, 'white']
-        ],
-        comments: [
-            [/\/\/+.*/, 'comment'],
-            [/\/\*/, { token: 'comment.quote', next: '@comment' }]
+            [/<\/(\w+)\s*>/, { token: getTag('$1') }],
+            [/<!--/, 'comment', '@comment']
         ],
         comment: [
-            [/[^*/]+/, 'comment'],
-            [/\*\//, { token: 'comment.quote', next: '@pop' }],
-            [/./, 'comment']
+            [/[^<\-]+/, 'comment.content'],
+            [/-->/, 'comment', '@pop'],
+            [/<!--/, 'comment.content.invalid'],
+            [/[<\-]/, 'comment.content']
         ],
-        numbers: [
-            [/0[xX][0-9a-fA-F]*/, 'number'],
-            [/[$][+-]*\d*(\.\d*)?/, 'number'],
-            [/((\d+(\.\d*)?)|(\.\d+))([eE][\-+]?\d+)?/, 'number']
+        // Almost full HTML tag matching, complete with embedded scripts & styles
+        tag: [
+            [/[ \t\r\n]+/, 'white'],
+            [/(type)(\s*=\s*)(")([^"]+)(")/, [ATTRIB_NAME, DELIM_ASSIGN, ATTRIB_VALUE,
+                    { token: ATTRIB_VALUE, switchTo: '@tag.$S2.$4' },
+                    ATTRIB_VALUE]],
+            [/(type)(\s*=\s*)(')([^']+)(')/, [ATTRIB_NAME, DELIM_ASSIGN, ATTRIB_VALUE,
+                    { token: ATTRIB_VALUE, switchTo: '@tag.$S2.$4' },
+                    ATTRIB_VALUE]],
+            [/(\w+)(\s*=\s*)("[^"]*"|'[^']*')/, [ATTRIB_NAME, DELIM_ASSIGN, ATTRIB_VALUE]],
+            [/\w+/, ATTRIB_NAME],
+            [/\/>/, getTag('$S2'), '@pop'],
+            [/>/, {
+                    cases: {
+                        '$S2==style': { token: getTag('$S2'), switchTo: 'embeddedStyle', nextEmbedded: 'text/css' },
+                        '$S2==script': {
+                            cases: {
+                                '$S3': { token: getTag('$S2'), switchTo: 'embeddedScript', nextEmbedded: '$S3' },
+                                '@default': { token: getTag('$S2'), switchTo: 'embeddedScript', nextEmbedded: 'text/javascript' }
+                            }
+                        },
+                        '@default': { token: getTag('$S2'), next: '@pop' }
+                    }
+                }],
         ],
-        strings: [
-            [/N"/, { token: 'string', next: '@string' }],
-            [/"/, { token: 'string', next: '@string' }]
+        embeddedStyle: [
+            [/[^<]+/, ''],
+            [/<\/style\s*>/, { token: '@rematch', next: '@pop', nextEmbedded: '@pop' }],
+            [/</, '']
         ],
-        string: [
-            [/[^"]+/, 'string'],
-            [/""/, 'string'],
-            [/"/, { token: 'string', next: '@pop' }]
+        embeddedScript: [
+            [/[^<]+/, ''],
+            [/<\/script\s*>/, { token: '@rematch', next: '@pop', nextEmbedded: '@pop' }],
+            [/</, '']
         ],
-        complexIdentifiers: [
-            [/\[/, { token: 'identifier.quote', next: '@bracketedIdentifier' }],
-            [/'/, { token: 'identifier.quote', next: '@quotedIdentifier' }]
-        ],
-        bracketedIdentifier: [
-            [/[^\]]+/, 'identifier'],
-            [/]]/, 'identifier'],
-            [/]/, { token: 'identifier.quote', next: '@pop' }]
-        ],
-        quotedIdentifier: [
-            [/[^']+/, 'identifier'],
-            [/''/, 'identifier'],
-            [/'/, { token: 'identifier.quote', next: '@pop' }]
-        ]
     }
 };
 
