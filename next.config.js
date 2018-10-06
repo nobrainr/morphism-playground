@@ -6,7 +6,7 @@ const plugins = [new MonacoWebpackPlugin()];
 module.exports = withCSS(
   withTypescript({
     webpack(config, options) {
-      config.plugins.push(...plugins);
+      //   config.plugins.push(...plugins);
       return config;
     }
   })
