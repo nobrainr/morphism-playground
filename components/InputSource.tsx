@@ -1,17 +1,21 @@
 import { Component } from 'react';
 import Playground from './Playground';
-
+import { SourceSchemaContext } from './SourceSchemaProvider';
 class InputSource extends Component<any> {
-  state = {
-    code: ''
-  };
+  monaco: any;
+  constructor(props) {
+    super(props);
+  }
 
-  onChange(code) {
-    this.setState({ code });
+  onChange(code, callback) {
+    callback(code);
   }
   render() {
-    const code = this.state.code;
-    return <Playground value={code} onChange={code => this.onChange(code)} />;
+    return (
+      <SourceSchemaContext.Consumer>
+        {({ source, updateSource }) => <Playground value={source} language="json" onChange={code => this.onChange(code, updateSource)} />}
+      </SourceSchemaContext.Consumer>
+    );
   }
 }
 

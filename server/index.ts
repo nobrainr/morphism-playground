@@ -9,7 +9,7 @@ const handle = app.getRequestHandler();
 app.prepare().then(() => {
   const server = express();
 
-  server.use('/monaco-editor-external', express.static(`${__dirname}/node_modules/@timkendrick/monaco-editor/dist/external`));
+  server.use('/', express.static(`${__dirname}/node_modules/monaco-editor/esm/vs/editor`));
 
   server.get('*', (req, res) => {
     return handle(req, res);

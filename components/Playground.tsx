@@ -1,19 +1,25 @@
-declare var window;
-window.MonacoEnvironment = { baseUrl: '/monaco-editor-external' };
-import '@timkendrick/monaco-editor/dist/external';
-import MonacoEditor from 'react-monaco-editor';
-import '../node_modules/@timkendrick/monaco-editor/dist/external/monaco.css';
+import dynamic from 'next/dynamic';
+import { MonacoEditorProps } from 'react-monaco-editor';
+import { Component } from 'react';
 
-export default props => (
-  <MonacoEditor
-    width={550}
-    height={600}
-    language="javascript"
-    theme="vs-dark"
-    value=""
-    options={{ selectOnLineNumbers: true }}
-    onChange={() => null}
-    editorDidMount={() => null}
-    {...props}
-  />
-);
+class Playground extends Component<MonacoEditorProps> {
+  MonacoEditor = dynamic<MonacoEditorProps, MonacoEditorProps>(import('react-monaco-editor') as any, { ssr: false });
+
+  render() {
+    return this.MonacoEditor ? (
+      <this.MonacoEditor
+        width={475}
+        height={600}
+        language="javascript"
+        theme="vs-dark"
+        value=""
+        options={{ selectOnLineNumbers: true }}
+        onChange={() => null}
+        editorDidMount={() => null}
+        {...this.props}
+      />
+    ) : null;
+  }
+}
+export { Playground };
+export default Playground;
