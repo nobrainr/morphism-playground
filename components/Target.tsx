@@ -5,10 +5,10 @@ import Playground from './Playground';
 
 class Target extends Component<any> {
   render() {
+    let targetResult = null;
     return (
       <SourceSchemaContext.Consumer>
         {({ source, schema }) => {
-          let result;
           try {
             console.log('debug:: receive', source, schema.toString());
 
@@ -18,15 +18,12 @@ class Target extends Component<any> {
             const schemaObject = eval(`(()=>(${schema}))()`);
             console.log('debug:: parsed schema', schemaObject);
 
-            result = morphism(schemaObject, sourceObject);
+            targetResult = morphism(schemaObject, sourceObject);
             console.log('debug:: parsed schema', schemaObject);
           } catch (e) {
             console.log('debug:: catching something', e.message);
           }
-          return result ? <Playground value={result.toString()} /> : null;
-          // <section>
-          //   <pre>{JSON.stringify(result, null, 2)}</pre>
-          // </section>
+          return targetResult ? <Playground value={JSON.stringify(targetResult, null, 2)} language="json" /> : null;
         }}
       </SourceSchemaContext.Consumer>
     );
