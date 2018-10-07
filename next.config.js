@@ -6,7 +6,10 @@ const plugins = [new MonacoWebpackPlugin()];
 module.exports = withCSS(
   withTypescript({
     webpack(config, options) {
-      config.plugins.push(...plugins);
+      config.node = {
+        fs: 'empty'
+      };
+      config.plugins.push(new MonacoWebpackPlugin());
       return config;
     }
   })
