@@ -4,7 +4,7 @@ import { InputSource } from './InputSource';
 import { Schema } from './Schema';
 import { Target } from './Target';
 import { SourceSchemaProvider } from './SourceSchemaProvider';
-
+import { Typography } from '@rmwc/typography';
 const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -28,15 +28,15 @@ export class MorphismViz extends Component {
         <MainContainer>
           <PlaygroundsContainer>
             <SectionContainer>
-              <h4>Source</h4>
+              <Typography use="headline4">Source (JSON)</Typography>
               <InputSource />
             </SectionContainer>
             <SectionContainer>
-              <h4>Schema</h4>
+              <Typography use="headline4">Schema (JS)</Typography>
               <Schema />
             </SectionContainer>
             <SectionContainer>
-              <h4>Target</h4>
+              <Typography use="headline4">Target</Typography>
               <Target />
             </SectionContainer>
           </PlaygroundsContainer>
