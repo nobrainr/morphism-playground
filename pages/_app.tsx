@@ -3,6 +3,7 @@ import App, { Container } from 'next/app';
 
 import '../src/styles/material-styles.scss';
 import { TopBar } from '../src/components';
+import '../node_modules/normalize.css/normalize.css';
 
 class MyApp extends App<any> {
   static async getInitialProps({ Component, ctx }) {
