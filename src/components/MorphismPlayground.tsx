@@ -17,12 +17,21 @@ const PlaygroundsContainer = styled.div`
   display: flex;
   flex-direction: row;
 `;
+const MorphingStatus = styled(Typography).attrs({
+  use: 'caption',
+  theme: 'secondary-bg on-secondary'
+})`
+  padding: 4px;
+`;
 
 const OutputContainer = styled.div`
   & {
     display: flex;
     flex-direction: column;
     flex: 1;
+    ${MorphingStatus} {
+      margin-left: 12px;
+    }
     .content {
       display: flex;
       flex: 1;
@@ -44,7 +53,7 @@ const PlaygroundHeader = styled.header`
   align-items: center;
   justify-content: space-between;
   background-color: #000;
-  padding: 5px 10px;
+  padding: 5px 15px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 `;
 
@@ -60,6 +69,7 @@ const Divider = styled<IDivider, any>('div')`
   display: flex;
   flex: 0 auto;
 `;
+
 export class MorphismViz extends Component {
   render() {
     return (
@@ -87,17 +97,23 @@ export class MorphismViz extends Component {
           </PlaygroundsContainer>
           <Divider direction="horizontal" />
           <SourceSchemaContext.Consumer>
-            {({ stats }) => {
+            {({ stats, morphingStatus }) => {
+              console.log(morphingStatus);
               return (
                 <OutputContainer>
                   <PlaygroundHeader>
                     <Typography use="headline6" theme="onPrimary">
                       Target
                     </Typography>
-                    <Typography use="caption" theme="secondary">
-                      [Done] Morphed {stats.numberOfItems} items successfully in {stats.lastRunElapsedTime}
-                      ms
-                    </Typography>
+                    <div>
+                      <Typography use="caption" theme="secondary">
+                        Morphed {stats.numberOfItems} {stats.numberOfItems > 1 ? 'items' : 'item'} successfully in
+                        <MorphingStatus>
+                          {stats.lastRunElapsedTime}
+                          ms
+                        </MorphingStatus>
+                      </Typography>
+                    </div>
                   </PlaygroundHeader>
                   <div className="content">
                     <section>

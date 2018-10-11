@@ -14,6 +14,7 @@ interface ProviderProps {
     lastRunElapsedTime: number;
     numberOfItems: number;
   };
+  morphingStatus?: 'morphing' | 'done' | 'failed' | 'idle';
 }
 
 type ProviderState = ProviderProps;
@@ -42,7 +43,8 @@ export class SourceSchemaProvider extends Component<ProviderProps & SourceSchema
     stats: {
       lastRunElapsedTime: null,
       numberOfItems: 0
-    }
+    },
+    morphingStatus: 'idle'
   };
   updateSource(source) {
     this.setState({ source });
@@ -65,11 +67,16 @@ export class SourceSchemaProvider extends Component<ProviderProps & SourceSchema
         ${this.state.schema}; 
         return schema 
       })()`);
-      const { data, infos } = monitoredScope(morphism, schemaObject, sourceObject);
+      this.setState({ morphingStatus: 'morphing' });
+      const fn = () => morphism(schemaObject, sourceObject);
+      this.setState({ morphingStatus: 'done' });
+
+      const { data, infos } = monitoredScope(fn);
       const numberOfItemsMorphed = sourceObject ? (Array.isArray(sourceObject) ? sourceObject.length : 1) : 0;
       this.setState({ result: data, stats: { lastRunElapsedTime: infos.elapsedTime, numberOfItems: numberOfItemsMorphed } });
     } catch (e) {
       console.error('Something went wrong', e.message);
+      this.setState({ morphingStatus: 'failed' });
     }
   }
   render() {
@@ -80,6 +87,7 @@ export class SourceSchemaProvider extends Component<ProviderProps & SourceSchema
           schema: this.state.schema,
           result: this.state.result,
           stats: this.state.stats,
+          morphingStatus: this.state.morphingStatus,
           updateSource: source => this.updateSource(source),
           updateSchema: schema => this.updateSchema(schema)
         }}
