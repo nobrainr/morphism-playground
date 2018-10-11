@@ -57,6 +57,11 @@ const PlaygroundHeader = styled.header`
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 `;
 
+const StyledCaption = styled(Typography).attrs({
+  use: 'caption',
+  theme: 'secondary'
+})``;
+
 interface IDivider {
   direction: 'horizontal' | 'vertical';
 }
@@ -74,32 +79,33 @@ export class MorphismViz extends Component {
   render() {
     return (
       <SourceSchemaProvider>
-        <MainContainer>
-          <PlaygroundsContainer>
-            <Divider />
-            <PlaygroundContainer>
-              <PlaygroundHeader>
-                <Typography use="headline6" theme="onPrimary">
-                  Source (JSON)
-                </Typography>
-              </PlaygroundHeader>
-              <InputSource />
-            </PlaygroundContainer>
-            <Divider />
-            <PlaygroundContainer>
-              <PlaygroundHeader>
-                <Typography use="headline6" theme="onPrimary">
-                  Schema (JS)
-                </Typography>
-              </PlaygroundHeader>
-              <Schema />
-            </PlaygroundContainer>
-          </PlaygroundsContainer>
-          <Divider direction="horizontal" />
-          <SourceSchemaContext.Consumer>
-            {({ stats, morphingStatus }) => {
-              console.log(morphingStatus);
-              return (
+        <SourceSchemaContext.Consumer>
+          {({ stats, errors }) => {
+            return (
+              <MainContainer>
+                <PlaygroundsContainer>
+                  <Divider />
+                  <PlaygroundContainer>
+                    <PlaygroundHeader>
+                      <Typography use="headline6" theme="onPrimary">
+                        Source (JSON)
+                      </Typography>
+                      <StyledCaption>{errors.source}</StyledCaption>
+                    </PlaygroundHeader>
+                    <InputSource />
+                  </PlaygroundContainer>
+                  <Divider />
+                  <PlaygroundContainer>
+                    <PlaygroundHeader>
+                      <Typography use="headline6" theme="onPrimary">
+                        Schema (JS)
+                      </Typography>
+                      <StyledCaption>{errors.schema}</StyledCaption>
+                    </PlaygroundHeader>
+                    <Schema />
+                  </PlaygroundContainer>
+                </PlaygroundsContainer>
+                <Divider direction="horizontal" />
                 <OutputContainer>
                   <PlaygroundHeader>
                     <Typography use="headline6" theme="onPrimary">
@@ -121,10 +127,10 @@ export class MorphismViz extends Component {
                     </section>
                   </div>
                 </OutputContainer>
-              );
-            }}
-          </SourceSchemaContext.Consumer>
-        </MainContainer>
+              </MainContainer>
+            );
+          }}
+        </SourceSchemaContext.Consumer>
       </SourceSchemaProvider>
     );
   }

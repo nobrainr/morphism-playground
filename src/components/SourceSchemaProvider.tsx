@@ -1,5 +1,25 @@
 import React, { Component } from 'react';
 import { Schema, morphism } from 'morphism';
+class BaseError extends Error {
+  constructor(...params) {
+    super(...params);
+
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, BaseError);
+    }
+  }
+}
+
+class SchemaError extends BaseError {
+  constructor(message = 'Wrong Schema Format', ...params) {
+    super(message, ...params);
+  }
+}
+class SourceError extends BaseError {
+  constructor(message = 'Wrong JSON Format', ...params) {
+    super(message, ...params);
+  }
+}
 
 interface SourceSchemaContext {
   updateSource?: (source) => void;
@@ -15,6 +35,10 @@ interface ProviderProps {
     numberOfItems: number;
   };
   morphingStatus?: 'morphing' | 'done' | 'failed' | 'idle';
+  errors?: {
+    source?: string;
+    schema?: string;
+  };
 }
 
 type ProviderState = ProviderProps;
@@ -44,7 +68,11 @@ export class SourceSchemaProvider extends Component<ProviderProps & SourceSchema
       lastRunElapsedTime: null,
       numberOfItems: 0
     },
-    morphingStatus: 'idle'
+    morphingStatus: 'idle',
+    errors: {
+      source: null,
+      schema: null
+    }
   };
   updateSource(source) {
     this.setState({ source });
@@ -57,16 +85,62 @@ export class SourceSchemaProvider extends Component<ProviderProps & SourceSchema
   componentDidMount() {
     this.updateResult();
   }
+  updateSchemaError(payload) {
+    const { errors } = this.state;
+    this.setState({ errors: { ...errors, schema: payload } });
+  }
+  resetSourceError() {
+    const { errors } = this.state;
+    this.setState({ errors: { ...errors, source: null } });
+  }
   updateResult() {
+    const { errors } = this.state;
+
+    let schemaObject;
     try {
       if (!this.state.schema.includes('const schema') && !this.state.schema.includes('let schema')) {
-        throw new Error('You should set your schema to a variable called schema => const schema = {}');
+        throw new SchemaError('You should set your schema to a variable called schema => const schema = {}');
+      } else {
+        try {
+          schemaObject = eval(`(()=>{
+            ${this.state.schema};
+            return schema
+          })()`);
+          this.updateSchemaError(null);
+        } catch (error) {
+          throw new SchemaError(error.message);
+        }
       }
-      const sourceObject = JSON.parse(this.state.source);
-      const schemaObject = eval(`(()=>{ 
-        ${this.state.schema}; 
-        return schema 
-      })()`);
+    } catch (e) {
+      if (e instanceof SchemaError) {
+        this.setState({ errors: { ...errors, schema: e.message } });
+      } else {
+        console.error('Something went wrong', e.message);
+      }
+    } finally {
+      this.setState({ morphingStatus: 'failed' });
+    }
+
+    let sourceObject;
+    try {
+      try {
+        sourceObject = JSON.parse(this.state.source);
+        this.resetSourceError();
+      } catch (error) {
+        throw new SourceError(error.message);
+      }
+    } catch (e) {
+      const { errors } = this.state;
+      if (e instanceof SourceError) {
+        this.setState({ errors: { ...errors, source: e.message } });
+      } else {
+        console.error('Something went wrong', e.message);
+      }
+    } finally {
+      this.setState({ morphingStatus: 'failed' });
+    }
+
+    if (schemaObject && sourceObject) {
       this.setState({ morphingStatus: 'morphing' });
       const fn = () => morphism(schemaObject, sourceObject);
       this.setState({ morphingStatus: 'done' });
@@ -74,9 +148,6 @@ export class SourceSchemaProvider extends Component<ProviderProps & SourceSchema
       const { data, infos } = monitoredScope(fn);
       const numberOfItemsMorphed = sourceObject ? (Array.isArray(sourceObject) ? sourceObject.length : 1) : 0;
       this.setState({ result: data, stats: { lastRunElapsedTime: infos.elapsedTime, numberOfItems: numberOfItemsMorphed } });
-    } catch (e) {
-      console.error('Something went wrong', e.message);
-      this.setState({ morphingStatus: 'failed' });
     }
   }
   render() {
@@ -87,6 +158,7 @@ export class SourceSchemaProvider extends Component<ProviderProps & SourceSchema
           schema: this.state.schema,
           result: this.state.result,
           stats: this.state.stats,
+          errors: this.state.errors,
           morphingStatus: this.state.morphingStatus,
           updateSource: source => this.updateSource(source),
           updateSchema: schema => this.updateSchema(schema)
