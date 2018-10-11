@@ -1,14 +1,10 @@
 
 # dependencies
-/node_modules
+node_modules
 
-# testing
-/coverage
 
-# production
-/build
-/dist
-/.next
+
+.next
 
 # misc
 .DS_Store
