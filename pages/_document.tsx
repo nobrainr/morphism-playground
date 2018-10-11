@@ -13,6 +13,19 @@ const StyledAppHtml = styled.html`
     margin: 0px;
     height: 100%;
   }
+
+  & > body {
+    font-family: Roboto, -apple-system, BlinkMacSystemFont, Avenir Next, Avenir, Helvetica, sans-serif;
+    * {
+      box-sizing: border-box;
+    }
+    /* Theme Provider Div */
+    > div {
+      display: flex;
+      flex-direction: column;
+      flex: 1 1;
+    }
+  }
 `;
 
 export default class MyDocument extends Document {
