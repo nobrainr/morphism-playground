@@ -3,9 +3,8 @@ import styled from 'styled-components';
 import { InputSource } from './InputSource';
 import { Schema } from './Schema';
 import { Target } from './Target';
-import { SourceSchemaProvider } from './SourceSchemaProvider';
+import { SourceSchemaProvider, SourceSchemaContext } from './SourceSchemaProvider';
 import { Typography } from '@rmwc/typography';
-import { Elevation } from '@rmwc/elevation';
 
 const MainContainer = styled.div`
   display: flex;
@@ -23,14 +22,12 @@ const OutputContainer = styled.div`
   & {
     display: flex;
     flex-direction: column;
+    flex: 1;
     .content {
       display: flex;
-      flex-direction: row;
-      section {
-        display: flex;
-        flex-direction: row;
+      flex: 1;
+      & section {
         flex: 1 1;
-        margin: 0 16px;
       }
     }
   }
@@ -44,6 +41,8 @@ const PlaygroundContainer = styled.div`
 
 const PlaygroundHeader = styled.header`
   display: flex;
+  align-items: center;
+  justify-content: space-between;
   background-color: #000;
   padding: 5px 10px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -87,25 +86,28 @@ export class MorphismViz extends Component {
             </PlaygroundContainer>
           </PlaygroundsContainer>
           <Divider direction="horizontal" />
-
-          <OutputContainer>
-            <PlaygroundHeader>
-              <Typography use="headline6" theme="onPrimary">
-                Target
-              </Typography>
-            </PlaygroundHeader>
-            <div className="content">
-              <section>
-                <Typography use="overline">Infos</Typography>
-                <Elevation z={9} transition>
-                  elapsed time: last updated: 12seconds ago
-                </Elevation>
-              </section>
-              <section>
-                <Target />
-              </section>
-            </div>
-          </OutputContainer>
+          <SourceSchemaContext.Consumer>
+            {({ stats }) => {
+              return (
+                <OutputContainer>
+                  <PlaygroundHeader>
+                    <Typography use="headline6" theme="onPrimary">
+                      Target
+                    </Typography>
+                    <Typography use="caption" theme="secondary">
+                      [Done] Morphed {stats.numberOfItems} items successfully in {stats.lastRunElapsedTime}
+                      ms
+                    </Typography>
+                  </PlaygroundHeader>
+                  <div className="content">
+                    <section>
+                      <Target />
+                    </section>
+                  </div>
+                </OutputContainer>
+              );
+            }}
+          </SourceSchemaContext.Consumer>
         </MainContainer>
       </SourceSchemaProvider>
     );
