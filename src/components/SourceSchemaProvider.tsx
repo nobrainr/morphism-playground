@@ -10,11 +10,25 @@ interface ProviderProps {
   source?: string;
   schema?: string;
   result?: JSON;
+  stats?: {
+    lastRunElapsedTime: number;
+    numberOfItems: number;
+  };
 }
 
+type ProviderState = ProviderProps;
+
 export const SourceSchemaContext = React.createContext<SourceSchemaContext & ProviderProps>({});
-export class SourceSchemaProvider extends Component<ProviderProps & SourceSchemaContext> {
-  state = {
+
+function monitoredScope(fn: Function, ...args: any[]) {
+  const startTime = performance.now();
+  const result = fn.call(this, ...args);
+  const endTime = performance.now();
+  const elapsedTime = Math.round((endTime - startTime) * 1000) / 1000;
+  return { data: result, infos: { startTime, endTime, elapsedTime } };
+}
+export class SourceSchemaProvider extends Component<ProviderProps & SourceSchemaContext, ProviderState> {
+  state: ProviderState = {
     source: JSON.stringify(DEFAULT_SOURCE, null, 2),
     schema: `const schema = {
   id: 'id',
@@ -24,7 +38,11 @@ export class SourceSchemaProvider extends Component<ProviderProps & SourceSchema
   description: ({ actor, type, payload, repo }) =>
     \`\${actor.display_login} \${payload.action ? \`\${payload.action} \` : ''}\${type} on \${repo.name}\`
 }`,
-    result: null
+    result: null,
+    stats: {
+      lastRunElapsedTime: null,
+      numberOfItems: 0
+    }
   };
   updateSource(source) {
     this.setState({ source });
@@ -47,9 +65,9 @@ export class SourceSchemaProvider extends Component<ProviderProps & SourceSchema
         ${this.state.schema}; 
         return schema 
       })()`);
-
-      const result = morphism(schemaObject, sourceObject);
-      this.setState({ result });
+      const { data, infos } = monitoredScope(morphism, schemaObject, sourceObject);
+      const numberOfItemsMorphed = sourceObject ? (Array.isArray(sourceObject) ? sourceObject.length : 1) : 0;
+      this.setState({ result: data, stats: { lastRunElapsedTime: infos.elapsedTime, numberOfItems: numberOfItemsMorphed } });
     } catch (e) {
       console.error('Something went wrong', e.message);
     }
@@ -61,6 +79,7 @@ export class SourceSchemaProvider extends Component<ProviderProps & SourceSchema
           source: this.state.source,
           schema: this.state.schema,
           result: this.state.result,
+          stats: this.state.stats,
           updateSource: source => this.updateSource(source),
           updateSchema: schema => this.updateSchema(schema)
         }}
