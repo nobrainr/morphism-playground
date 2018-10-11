@@ -1,14 +1,28 @@
 import { Component } from 'react';
-// import { morphism } from 'morphism';
 import { SourceSchemaContext } from './SourceSchemaProvider';
-// import Playground from './Playground';
 import { JSONViewer } from './';
+
+import styled from 'styled-components';
+
+const StyledJSONViewer = styled.div`
+  height: 100%;
+
+  & .react-json-view {
+    overflow: auto;
+    padding: 15px 30px;
+    height: 100%;
+  }
+`;
 class Target extends Component<any> {
   render() {
     return (
       <SourceSchemaContext.Consumer>
         {({ result }) => {
-          return result ? <JSONViewer json={result} /> : null;
+          return result ? (
+            <StyledJSONViewer>
+              <JSONViewer json={result} />
+            </StyledJSONViewer>
+          ) : null;
         }}
       </SourceSchemaContext.Consumer>
     );
