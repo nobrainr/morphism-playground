@@ -1,14 +1,30 @@
 import Document, { Head, Main, NextScript } from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
 import styled from 'styled-components';
+import { ThemeProvider } from '@rmwc/theme';
+import { theme } from '../src/styles/theme';
 
 const StyledAppHtml = styled.html`
   &,
   & > body,
   #__next {
     display: flex;
+    flex-direction: column;
     margin: 0px;
     height: 100%;
+  }
+
+  & > body {
+    font-family: Roboto, -apple-system, BlinkMacSystemFont, Avenir Next, Avenir, Helvetica, sans-serif;
+    * {
+      box-sizing: border-box;
+    }
+    /* Theme Provider Div */
+    > div {
+      display: flex;
+      flex-direction: column;
+      flex: 1 1;
+    }
   }
 `;
 
@@ -25,8 +41,10 @@ export default class MyDocument extends Document {
       <StyledAppHtml>
         <Head>{this.props.styleTags}</Head>
         <body>
-          <Main />
-          <NextScript />
+          <ThemeProvider options={theme}>
+            <Main />
+            <NextScript />
+          </ThemeProvider>
         </body>
       </StyledAppHtml>
     );

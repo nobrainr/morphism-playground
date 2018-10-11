@@ -1,0 +1,66 @@
+$font-path: '/static/fonts/Roboto';
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-display: auto;
+  font-weight: 100;
+  src: local('Roboto Thin'), local('Roboto-Thin'), url('#{$font-path}/Roboto-Thin-webfont.woff') format('woff');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-display: auto;
+  font-weight: 300;
+  src: local('Roboto Light'), local('Roboto-Light'), url('#{$font-path}/Roboto-Light-webfont.woff') format('woff');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-display: auto;
+  font-weight: 400;
+  src: local('Roboto Regular'), local('Roboto-Regular'), url('#{$font-path}/Roboto-Regular-webfont.woff') format('woff');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-display: auto;
+  font-weight: 500;
+  src: local('Roboto Medium'), local('Roboto-Medium'), url('#{$font-path}/Roboto-Medium-webfont.woff') format('woff');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-display: auto;
+  font-weight: 700;
+  src: local('Roboto Bold'), local('Roboto-Bold'), url('#{$font-path}/Roboto-Bold-webfont.woff') format('woff');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-display: auto;
+  font-weight: 900;
+  src: local('Roboto Black'), local('Roboto-Black'), url('#{$font-path}/Roboto-Black-webfont.woff') format('woff');
+}
+
+@import '~@material/theme/dist/mdc.theme.min.css';
+@import '~@material/typography/dist/mdc.typography.min.css';
+@import '~@material/button/dist/mdc.button.min.css';
+@import '~@material/elevation/dist/mdc.elevation.min.css';
+@import '~@material/drawer/dist/mdc.drawer.min.css';
+@import '~@material/list/dist/mdc.list.min.css';
+@import '~@material/toolbar/dist/mdc.toolbar.min.css';
+@import '~@material/textfield/dist/mdc.textfield.min.css';
+@import '~@material/form-field/dist/mdc.form-field.min.css';
+
+// Uncomment to add component CSS to all APP
+
+// @import '~@material/snackbar/dist/mdc.snackbar.min.css';
+// @import '~@material/card/dist/mdc.card.min.css';
+// @import '~@material/dialog/dist/mdc.dialog.min.css';
+// @import '~@material/layout-grid/dist/mdc.layout-grid.min.css';
+// @import '~@material/menu/dist/mdc.menu.min.css';
+// @import '~@material/ripple/dist/mdc.ripple.min.css';
+// @import '~@material/toolbar/dist/mdc.toolbar.min.css';
+// @import '~@material/checkbox/dist/mdc.checkbox.min.css';
+// @import '~@material/chips/dist/mdc.chips.min.css';

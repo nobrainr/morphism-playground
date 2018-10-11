@@ -2,30 +2,41 @@
   "scripts": {
     "dev": "nodemon server/index.ts",
     "build": "next build && tsc --project tsconfig.server.json",
-    "start": "NODE_ENV=production node .next/production-server/index.js"
+    "start": "NODE_ENV=production node .next/production-server/index.js",
+    "deploy": "now --token $NOW_TOKEN --docker",
+    "alias": "now alias --token $NOW_TOKEN",
+    "deploy:staging": "npm run deploy -- -A ./now.staging.json",
+    "alias:staging": "now alias --local-config=now.staging.json --token $NOW_TOKEN"
   },
   "dependencies": {
     "@babel/core": "^7.0.0-rc.1",
     "@zeit/next-css": "^1.0.1",
+    "@zeit/next-sass": "^1.0.1",
     "@zeit/next-typescript": "1.1.0",
     "babel-loader": "^7.1.4",
     "express": "^4.16.3",
     "lodash": "^4.17.11",
+    "mdi-react": "^4.4.0",
     "monaco-editor-webpack-plugin": "^1.5.4",
     "morphism": "^1.6.1",
     "next": "7.0.1",
+    "node-sass": "^4.9.3",
+    "normalize.css": "^8.0.0",
     "react": "16.5.2",
     "react-dom": "16.5.2",
+    "react-json-view": "^1.19.1",
     "react-monaco-editor": "^0.19.0",
+    "rmwc": "^3.0.4",
     "styled-components": "^3.4.9",
     "typescript": "latest",
     "typescript-babel-jest": "^1.0.5"
   },
   "devDependencies": {
-    "@types/next": "^2.4.11",
+    "@types/next": "^7.0.1",
     "@types/react": "^16.0.36",
     "babel-plugin-styled-components": "^1.8.0",
     "nodemon": "^1.17.5",
-    "ts-node": "^4.1.0"
+    "now": "^11.4.6",
+    "ts-node": "^7.0.1"
   }
 }

@@ -14,7 +14,9 @@ class Schema extends Component<any> {
   render() {
     return (
       <SourceSchemaContext.Consumer>
-        {({ schema, updateSchema }) => <Playground value={schema} onChange={code => this.onChange(code, updateSchema)} />}
+        {({ schema, updateSchema }) => (
+          <Playground value={schema} options={{ minimap: { enabled: false } }} onChange={code => this.onChange(code, updateSchema)} />
+        )}
       </SourceSchemaContext.Consumer>
     );
   }

@@ -7,8 +7,8 @@ class Playground extends Component<MonacoEditorProps> {
   render() {
     return this.MonacoEditor ? (
       <this.MonacoEditor
-        width={475}
-        height={600}
+        width={'100%'}
+        height={300}
         language="javascript"
         theme="vs-dark"
         value=""
