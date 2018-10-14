@@ -102,10 +102,7 @@ export class SourceSchemaProvider extends Component<ProviderProps & SourceSchema
         throw new SchemaError('You should set your schema to a variable called schema => const schema = {}');
       } else {
         try {
-          schemaObject = eval(`(()=>{
-            ${this.state.schema};
-            return schema
-          })()`);
+          schemaObject = new Function(`${this.state.schema};return schema;`)();
           this.updateSchemaError(null);
         } catch (error) {
           throw new SchemaError(error.message);
