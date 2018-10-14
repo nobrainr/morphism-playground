@@ -82,6 +82,7 @@ const Divider = styled<IDivider, any>('div')`
   border-right: 1px solid rgba(48, 48, 48, 0.4);
   display: flex;
   flex: 0 auto;
+  cursor: ${props => props.direction === 'horizontal' ? 'row-resize': 'col-resize'};
 `;
 
 export class MorphismViz extends Component {
