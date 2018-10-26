@@ -20,7 +20,11 @@ class SourceError extends BaseError {
     super(message, ...params);
   }
 }
-
+class EvalError extends BaseError {
+  constructor(message = 'Fail to evaluate', ...params) {
+    super(message, ...params);
+  }
+}
 interface SourceSchemaContext {
   updateSource?: (source) => void;
   updateSchema?: <T>(schema: Schema<T>) => void;
@@ -52,10 +56,43 @@ function monitoredScope(fn: Function, ...args: any[]) {
   const elapsedTime = Math.round((endTime - startTime) * 1000) / 1000;
   return { data: result, infos: { startTime, endTime, elapsedTime } };
 }
+
+// Babel
+import { transformSync } from '@babel/core';
+
+function requireFromString(code) {
+  try {
+    // eslint-disable-next-line no-new-func
+    const fn = new Function('module', 'exports', `${code};return module.exports`);
+
+    const _module = { exports: {} };
+    return fn(_module, _module.exports);
+  } catch (error) {
+    throw new EvalError(error.message);
+  }
+}
+function evaluateSchema(code) {
+  const options = {
+    presets: [require('@babel/preset-env')]
+  };
+  let output;
+  try {
+    output = transformSync(code, options).code;
+  } catch (error) {
+    throw new EvalError(error.message);
+  }
+  const mod = requireFromString(output);
+
+  if (!mod || !mod.schema) {
+    throw new SchemaError('You should export a schema in a variable `schema`. e.g: export const schema = {}');
+  }
+  return mod.schema;
+}
+
 export class SourceSchemaProvider extends Component<ProviderProps & SourceSchemaContext, ProviderState> {
   state: ProviderState = {
     source: JSON.stringify(DEFAULT_SOURCE, null, 2),
-    schema: `const schema = {
+    schema: `export const schema = {
   id: 'id',
   date: 'created_at',
   action: 'type',
@@ -98,21 +135,10 @@ export class SourceSchemaProvider extends Component<ProviderProps & SourceSchema
 
     let schemaObject;
     try {
-      if (!this.state.schema.includes('const schema') && !this.state.schema.includes('let schema')) {
-        throw new SchemaError('You should set your schema to a variable called schema => const schema = {}');
-      } else {
-        try {
-          schemaObject = eval(`(()=>{
-            ${this.state.schema};
-            return schema
-          })()`);
-          this.updateSchemaError(null);
-        } catch (error) {
-          throw new SchemaError(error.message);
-        }
-      }
+      schemaObject = evaluateSchema(this.state.schema);
+      this.updateSchemaError(null);
     } catch (e) {
-      if (e instanceof SchemaError) {
+      if (e instanceof SchemaError || e instanceof EvalError) {
         this.setState({ errors: { ...errors, schema: e.message } });
       } else {
         console.error('Something went wrong', e.message);
@@ -147,7 +173,13 @@ export class SourceSchemaProvider extends Component<ProviderProps & SourceSchema
 
       const { data, infos } = monitoredScope(fn);
       const numberOfItemsMorphed = sourceObject ? (Array.isArray(sourceObject) ? sourceObject.length : 1) : 0;
-      this.setState({ result: data, stats: { lastRunElapsedTime: infos.elapsedTime, numberOfItems: numberOfItemsMorphed } });
+      this.setState({
+        result: data,
+        stats: {
+          lastRunElapsedTime: infos.elapsedTime,
+          numberOfItems: numberOfItemsMorphed
+        }
+      });
     }
   }
   render() {
@@ -205,7 +237,8 @@ const DEFAULT_SOURCE = [
           },
           message: 'feat: Working playground 👌🏽',
           distinct: true,
-          url: 'https://api.github.com/repos/nobrainr/morphism-playground/commits/c6a79efc8760f1ce9010a646b25d73fbdb9b7c0b'
+          url:
+            'https://api.github.com/repos/nobrainr/morphism-playground/commits/c6a79efc8760f1ce9010a646b25d73fbdb9b7c0b'
         }
       ]
     },
