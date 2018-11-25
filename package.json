@@ -27,6 +27,7 @@
     "react-dom": "16.5.2",
     "react-json-view": "^1.19.1",
     "react-monaco-editor": "^0.19.0",
+    "react-split-pane": "^0.1.84",
     "rmwc": "^3.0.4",
     "styled-components": "^3.4.9",
     "typescript": "latest",
