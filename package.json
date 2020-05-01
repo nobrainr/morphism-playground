@@ -6,7 +6,9 @@
     "deploy": "now --token $NOW_TOKEN --docker --public",
     "alias": "now alias --token $NOW_TOKEN",
     "deploy:staging": "npm run deploy -- -A ./now.staging.json",
-    "alias:staging": "now alias --local-config=now.staging.json --token $NOW_TOKEN"
+    "alias:staging": "now alias --local-config=now.staging.json --token $NOW_TOKEN",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "dependencies": {
     "@babel/core": "^7.1.2",
@@ -30,7 +32,8 @@
     "rmwc": "^3.0.4",
     "styled-components": "^3.4.9",
     "typescript": "latest",
-    "typescript-babel-jest": "^1.0.5"
+    "typescript-babel-jest": "^1.0.5",
+    "snyk": "^1.316.1"
   },
   "devDependencies": {
     "@types/next": "^7.0.1",
@@ -39,5 +42,6 @@
     "nodemon": "^1.17.5",
     "now": "^11.4.6",
     "ts-node": "^7.0.1"
-  }
+  },
+  "snyk": true
 }
