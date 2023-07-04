@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@babel/core": "^7.1.2",
-    "@babel/preset-env": "^7.1.0",
+    "@babel/preset-env": "^7.22.6",
     "@zeit/next-css": "^1.0.1",
     "@zeit/next-sass": "^1.0.1",
     "@zeit/next-typescript": "1.1.0",
@@ -20,7 +20,7 @@
     "mdi-react": "^4.4.0",
     "monaco-editor-webpack-plugin": "^1.5.4",
     "morphism": "^1.6.1",
-    "next": "7.0.2",
+    "next": "10.0.2",
     "node-sass": "^4.9.3",
     "normalize.css": "^8.0.0",
     "react": "16.5.2",
