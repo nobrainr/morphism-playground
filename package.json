@@ -20,7 +20,7 @@
     "mdi-react": "^4.4.0",
     "monaco-editor-webpack-plugin": "^1.5.4",
     "morphism": "^1.6.1",
-    "next": "7.0.2",
+    "next": "13.5.0",
     "node-sass": "^4.9.3",
     "normalize.css": "^8.0.0",
     "react": "16.5.2",
