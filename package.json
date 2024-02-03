@@ -30,7 +30,7 @@
     "rmwc": "^3.0.4",
     "styled-components": "^3.4.9",
     "typescript": "latest",
-    "typescript-babel-jest": "^1.0.5"
+    "typescript-babel-jest": "^1.0.6"
   },
   "devDependencies": {
     "@types/next": "^7.0.1",
