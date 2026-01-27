@@ -16,12 +16,12 @@
     "@zeit/next-typescript": "1.1.0",
     "babel-loader": "^7.1.4",
     "express": "^4.16.3",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.23",
     "mdi-react": "^4.4.0",
     "monaco-editor-webpack-plugin": "^1.5.4",
     "morphism": "^1.6.1",
     "next": "7.0.2",
-    "node-sass": "^4.9.3",
+    "node-sass": "^9.0.0",
     "normalize.css": "^8.0.0",
     "react": "16.5.2",
     "react-dom": "16.5.2",
@@ -30,7 +30,7 @@
     "rmwc": "^3.0.4",
     "styled-components": "^3.4.9",
     "typescript": "latest",
-    "typescript-babel-jest": "^1.0.5"
+    "typescript-babel-jest": "^1.0.6"
   },
   "devDependencies": {
     "@types/next": "^7.0.1",
